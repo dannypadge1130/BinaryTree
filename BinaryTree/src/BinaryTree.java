@@ -9,9 +9,11 @@ public class BinaryTree {
 		
 		bt.addNode(bt.getRootNode(), 10, "Dan");
 		bt.addNode(bt.getRootNode(), 2, "Ashley");
+		bt.addNode(bt.getRootNode(), 1, "Ashley");
 		bt.addNode(bt.getRootNode(), 30, "Mike");
 		bt.addNode(bt.getRootNode(), 100, "Frank");
-		bt.addNode(bt.getRootNode(), 14, "Tim");
+		bt.addNode(bt.getRootNode(), 45, "Frank");
+		bt.addNode(bt.getRootNode(), 18, "Tim");
 		bt.addNode(bt.getRootNode(), 12, "Megan");
 		
 		//System.out.println(bt.findNode(2) != null ? "FOUND" : "NOT FOUND"); //FOUND
@@ -59,6 +61,7 @@ public class BinaryTree {
 		
 		boolean isItALeftChild = true;
 		
+		//this is simply a traversal to find the node to delete
 		while(focusNode != null && focusNode.getIndex() != node.getIndex()) {
 			
 			parentNode = focusNode;
@@ -79,6 +82,8 @@ public class BinaryTree {
 			
 		}
 		
+		
+		//this section is to perform the actual delete.
 		if(focusNode != null) {
 		
 			if(focusNode.getLeftNode() == null && focusNode.getRightNode() == null) {
@@ -129,53 +134,38 @@ public class BinaryTree {
 				
 			} else {
 				
-				Node replacement = getReplacementNode(focusNode);
+				//because we are moving the right tree on deletes.
+				Node replacementNode = focusNode.getRightNode();
 				
-				if(focusNode == this.getRootNode()) {
+				//need the leftmost child of the replacement node.
+				Node rLeftMostChild = replacementNode;
+				
+				while(rLeftMostChild.getLeftNode() != null) {
 					
-					this.setRootNode(replacement);
-					
-				} else if (isItALeftChild) {
-					
-					parentNode.setLeftNode(replacement);
-					
-				} else {
-					
-					parentNode.setRightNode(replacement);
+					rLeftMostChild = rLeftMostChild.getLeftNode();
 					
 				}
 				
-				replacement.setLeftNode(focusNode.getLeftNode());
+				
+				if(focusNode == this.getRootNode()) {
+					
+					this.setRootNode(replacementNode);
+					
+				} else if (isItALeftChild) {
+					
+					parentNode.setLeftNode(replacementNode);
+					
+				} else {
+					
+					parentNode.setRightNode(replacementNode);
+					
+				}
+				
+				rLeftMostChild.setLeftNode(focusNode.getLeftNode());
 				
 			}
 			
 		}
-		
-	}
-	
-	private Node getReplacementNode(Node replacedNode) {
-		
-		Node replacementParent = replacedNode;
-		Node replacement = replacedNode;
-		
-		Node focusNode = replacedNode.getRightNode();
-		
-		while(focusNode != null) {
-			
-			replacementParent = replacement;
-			replacement = focusNode;
-			focusNode = focusNode.getLeftNode();
-			
-		}
-		
-		if(replacement != replacedNode.getRightNode()) {
-			
-			replacementParent.setLeftNode(replacement.getRightNode());
-			replacement.setRightNode(replacedNode.getRightNode());
-			
-		}
-		
-		return replacement;
 		
 	}
 
