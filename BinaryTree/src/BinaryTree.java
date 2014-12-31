@@ -14,12 +14,15 @@ public class BinaryTree {
 		bt.addNode(bt.getRootNode(), 14, "Tim");
 		bt.addNode(bt.getRootNode(), 12, "Megan");
 		
-		System.out.println(bt.findNode(2) != null ? "FOUND" : "NOT FOUND"); //FOUND
-		System.out.println(bt.findNode(100) != null ? "FOUND" : "NOT FOUND"); //FOUND
-		System.out.println(bt.findNode(1000) != null ? "FOUND" : "NOT FOUND"); //NOT FOUND
-		System.out.println(bt.findNode(3) != null ? "FOUND" : "NOT FOUND"); //NOT FOUND
+		//System.out.println(bt.findNode(2) != null ? "FOUND" : "NOT FOUND"); //FOUND
+		//System.out.println(bt.findNode(100) != null ? "FOUND" : "NOT FOUND"); //FOUND
+		//System.out.println(bt.findNode(1000) != null ? "FOUND" : "NOT FOUND"); //NOT FOUND
+		//System.out.println(bt.findNode(3) != null ? "FOUND" : "NOT FOUND"); //NOT FOUND
 		
-		//bt.preorder(bt.getRootNode());
+		
+		bt.deleteNode(30);
+		
+		bt.preorder(bt.getRootNode());
 		//bt.inorder(bt.getRootNode());
 		//bt.postorder(bt.getRootNode());
 	}
@@ -48,6 +51,147 @@ public class BinaryTree {
 			
 		return focusNode;
 	}
+	
+	public void deleteNode(Node node) {
+		
+		Node focusNode = this.getRootNode();
+		Node parentNode = this.getRootNode();
+		
+		boolean isItALeftChild = true;
+		
+		while(focusNode != null && focusNode.getIndex() != node.getIndex()) {
+			
+			parentNode = focusNode;
+			
+			if(node.getIndex() < focusNode.getIndex()) {
+				
+				isItALeftChild = true;
+				
+				focusNode = focusNode.getLeftNode();
+				
+			} else {
+				
+				isItALeftChild = false;
+				
+				focusNode = focusNode.getRightNode();
+				
+			}
+			
+		}
+		
+		if(focusNode != null) {
+		
+			if(focusNode.getLeftNode() == null && focusNode.getRightNode() == null) {
+				if(focusNode == this.getRootNode()) {
+					
+					this.setRootNode(null);
+					
+				} else if(isItALeftChild) {
+					
+					parentNode.setLeftNode(null);
+				
+				} else {
+					
+					parentNode.setRightNode(null);
+				
+				}
+			} else if (focusNode.getLeftNode() == null) {
+				
+				if(focusNode == this.getRootNode()) {
+					
+					this.setRootNode(focusNode.getRightNode());
+					
+				} else if(isItALeftChild) {
+					
+					parentNode.setLeftNode(focusNode.getRightNode());
+					
+				} else {
+					
+					parentNode.setRightNode(focusNode.getRightNode());
+					
+				}				
+				
+			} else if (focusNode.getRightNode() == null) {
+				
+				if(focusNode == this.getRootNode()) {
+					
+					this.setRootNode(focusNode.getLeftNode());
+					
+				} else if(isItALeftChild) {
+					
+					parentNode.setLeftNode(focusNode.getLeftNode());
+					
+				} else {
+					
+					parentNode.setRightNode(focusNode.getLeftNode());
+					
+				}
+				
+			} else {
+				
+				Node replacement = getReplacementNode(focusNode);
+				
+				if(focusNode == this.getRootNode()) {
+					
+					this.setRootNode(replacement);
+					
+				} else if (isItALeftChild) {
+					
+					parentNode.setLeftNode(replacement);
+					
+				} else {
+					
+					parentNode.setRightNode(replacement);
+					
+				}
+				
+				replacement.setLeftNode(focusNode.getLeftNode());
+				
+			}
+			
+		}
+		
+	}
+	
+	private Node getReplacementNode(Node replacedNode) {
+		
+		Node replacementParent = replacedNode;
+		Node replacement = replacedNode;
+		
+		Node focusNode = replacedNode.getRightNode();
+		
+		while(focusNode != null) {
+			
+			replacementParent = replacement;
+			replacement = focusNode;
+			focusNode = focusNode.getLeftNode();
+			
+		}
+		
+		if(replacement != replacedNode.getRightNode()) {
+			
+			replacementParent.setLeftNode(replacement.getRightNode());
+			replacement.setRightNode(replacedNode.getRightNode());
+			
+		}
+		
+		return replacement;
+		
+	}
+
+	public void deleteNode(int index) {
+		
+		Node node = findNode(index);
+		
+		//while(node != null) {
+			
+			deleteNode(node);
+			//node = findNode(index);
+			
+		//}
+	}
+	
+	
 	
 	//insert new node. all insertions will create leaf nodes
 	public Node addNode(Node focusNode, int index, String info) {
