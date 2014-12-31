@@ -14,11 +14,40 @@ public class BinaryTree {
 		bt.addNode(bt.getRootNode(), 14, "Tim");
 		bt.addNode(bt.getRootNode(), 12, "Megan");
 		
+		System.out.println(bt.findNode(2) != null ? "FOUND" : "NOT FOUND"); //FOUND
+		System.out.println(bt.findNode(100) != null ? "FOUND" : "NOT FOUND"); //FOUND
+		System.out.println(bt.findNode(1000) != null ? "FOUND" : "NOT FOUND"); //NOT FOUND
+		System.out.println(bt.findNode(3) != null ? "FOUND" : "NOT FOUND"); //NOT FOUND
+		
 		//bt.preorder(bt.getRootNode());
 		//bt.inorder(bt.getRootNode());
 		//bt.postorder(bt.getRootNode());
 	}
 	
+	public Node findNode(int index) {
+		
+		Node focusNode = this.getRootNode();
+		
+		boolean found = false;
+		
+		while(focusNode != null && !found) {
+				
+			if(focusNode.getIndex() == index) {
+				
+				found = true;
+				
+			} else if(focusNode.getIndex() > index) {
+				
+				focusNode = focusNode.getLeftNode();
+				
+			} else {
+				
+				focusNode = focusNode.getRightNode();
+			}	
+		}
+			
+		return focusNode;
+	}
 	
 	//insert new node. all insertions will create leaf nodes
 	public Node addNode(Node focusNode, int index, String info) {
