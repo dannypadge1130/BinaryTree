@@ -1,4 +1,4 @@
-BinaryTree
+Binary Tree
 ==========
 
-Binary Tree
+Very simple binary tree implementation.
